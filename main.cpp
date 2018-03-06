@@ -21,13 +21,14 @@ int main( int argc, char** argv )
                        "-m 合并后横向包含几张图片;\n"
                        "-n 合并后纵向包含几张图片;\n"
                        "-t 这m*n个目录中含有目录中图片名字的txt文件名，每个目\n"
-                       "录中的名字都需要相同;\n"
+                       "录中的txt名字都需要相同;\n"
                        "-s 指定保存路径;\n"
                        "-p 指定m*n个包含图片名称的txt文件路径;若路径数量\n"
-                       "不够m*n，则会用空白补足。\n"
+                       "不够m*n，则会用空白补足。-p这个参数必须在前面的参\n"
+                       "数之后指定,是最后一个参数\n"
                        "\n"
                        "调用demo:\n"
-                       "./MergePicture -c 10 -m 2 -n 2 -t src.txt -s merge -p ./图片组1 ./图片组2 "
+                       "./MergePicture -c 8 -m 2 -n 2 -t src.txt -s merge -p ./图片组1 ./图片组2 "
                        "./图片组3 ./图片组4 \n\n\n"
                        );
         return 0;
@@ -172,7 +173,7 @@ int str2int(string str){
  * @param n 纵向n张图片
  * @param txtName 各个文件夹中指定文件名的txt文件;
  * 得到这个文件可以通过运行以下命令：ls | sort -t. -k1.1n >src.txt
- * @param paths 一组图片的路径
+ * @param paths 指定要合并图片的路径
  * @param savePath 保存路径
  */
 void merge(int count,int m,int n,string txtName,vector<string> paths,string savePath){
@@ -218,7 +219,7 @@ void merge(int count,int m,int n,string txtName,vector<string> paths,string save
                 }
 
                 //判断组内照片是否和baseMat的大小相等
-                ASSERT(img.size() == baseMat.size(),"组内图片大小不同");
+                ASSERT(img.size() == baseMat.size(),"图片大小不同");
 
                 //添加边缘
                 copyMakeBorder(img, img, 30, 5, 5, 5, BORDER_CONSTANT, Scalar(0, j*5+50, 0));
@@ -238,7 +239,7 @@ void merge(int count,int m,int n,string txtName,vector<string> paths,string save
                 cols.clear();
             }
 
-            // 合并了一张图片所需要的行
+            // 合并完一张图片所需要的行，跳出循环
             if(rows.size()>=size){
                 break;
             }

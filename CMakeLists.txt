@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11")
 
 # packages
 #set(OpenCV_DIR "/usr/local/include") 	    #修改了这一句，指定opencv头文件的路径
-set(OpenCV_DIR "/usr/local/opencv331/share/OpenCV")
+#set(OpenCV_DIR "/usr/local/opencv331/share/OpenCV")
 find_package(OpenCV REQUIRED)
 
 
