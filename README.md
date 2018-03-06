@@ -34,3 +34,12 @@ make
 ```
 ./MergePicture -c 8 -m 2 -n 2 -t src.txt -s merge -p ./图片组1 ./图片组2 ./图片组3 ./图片组4
 ```
+
+## 三、关于作者
+```javascript
+  var whoAmI = {
+    name   : "Mannix1994",
+    gitee  : "https://gitee.com/Mannix1994",
+    github : "https://github.com/Mannix1994"
+  }
+```
