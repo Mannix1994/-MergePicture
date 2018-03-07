@@ -14,7 +14,7 @@ void parse(int argc,char** argv,map<string,vector<string>> &args);
 int main( int argc, char** argv )
 {
     if(argc==1){
-        printf("调用方法: ./MergePicture -c number -m number -n number -t txtName "
+        printf("调用方法: ./MergePicture -c number1 -m number2 -n number3 -t txtName "
                        "-s save_path -p path1 path2 ... pathm*n\n"
                        "\n"
                        "-c 要合并图片的组数;\n"
