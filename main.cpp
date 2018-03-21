@@ -237,8 +237,12 @@ void merge(int count,int m,int n,vector<string> paths,string savePath){
         auto size = static_cast<const int>((paths.size()+m-1) / m);//计算这组图片有几行
         for(int j=0;j<m*n;j++){
             string picPath;
-            nameStreams[j] >> picPath;
-            if(j<paths.size() && !picPath.empty()) {
+            if(j<paths.size()) {
+
+                nameStreams[j] >> picPath;
+                if(picPath.empty()){
+                    ASSERT(false,paths[j]+"指定的txt文件的行数少于count指定的数目或者txt文件有空行");
+                }
 
                 //读取图片
                 Mat img = imread(picPath);
