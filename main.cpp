@@ -8,29 +8,14 @@ using namespace std;
 using namespace cv;
 
 int str2int(string str);
-void merge(int count,int m,int n,string txtName,vector<string> paths,string savePath);
+void help();
+void merge(int count,int m,int n,vector<string> paths,string savePath);
 void parse(int argc,char** argv,map<string,vector<string>> &args);
 
 int main( int argc, char** argv )
 {
     if(argc==1){
-        printf("调用方法: ./MergePicture -c number1 -m number2 -n number3 -t txtName "
-                       "-s save_path -p path1 path2 ... pathm*n\n"
-                       "\n"
-                       "-c 要合并图片的组数;\n"
-                       "-m 合并后横向包含几张图片;\n"
-                       "-n 合并后纵向包含几张图片;\n"
-                       "-t 这m*n个目录中含有目录中图片名字的txt文件名，每个目\n"
-                       "录中的txt名字都需要相同;\n"
-                       "-s 指定保存路径;\n"
-                       "-p 指定m*n个包含图片名称的txt文件路径;若路径数量\n"
-                       "不够m*n，则会用空白补足。-p这个参数必须在前面的参\n"
-                       "数之后指定,是最后一个参数\n"
-                       "\n"
-                       "调用demo:\n"
-                       "./MergePicture -c 8 -m 2 -n 2 -t src.txt -s merge -p ./图片组1 ./图片组2 "
-                       "./图片组3 ./图片组4 \n\n\n"
-                       );
+        help();
         return 0;
     }
 
@@ -59,9 +44,6 @@ int main( int argc, char** argv )
     ASSERT(m>0 && n >0,"m,n必须大于0");
 //    printf("count:%d m:%d n:%d\n",count,m,n);
 
-    string txtName = args["-t"][0];
-//    cout<<txtName<<endl;
-
     //提取路径
     vector<string> paths = args["-p"];
 //    for(int i=0;i<paths.size();i++){
@@ -69,9 +51,62 @@ int main( int argc, char** argv )
 //    }
 //    cout<<endl;
 
-    merge(count,m,n,txtName,paths,savePath);
+    merge(count,m,n,paths,savePath);
 
     return 0;
+}
+
+void help(){
+    printf("调用方法: ./MergePicture -c count -m m -n n "
+                   "-s save_path -p path1 path2 ... pathm*n\n"
+                   "\n"
+                   "-c 要合并图片的组数;\n"
+                   "-m 合并后横向包含几张图片;\n"
+                   "-n 合并后纵向包含几张图片;\n"
+                   "-s 指定保存路径;\n"
+                   "-p 指定m*n个包含图片名称的txt文件路径;若路径数量\n"
+                   "不够m*n，则会用空白补足。-p这个参数必须在前面的参\n"
+                   "数之后指定,是最后一个参数\n"
+                   "\n"
+                   "调用demo:\n"
+                   "./MergePicture -c 8 -m 2 -n 2 -s merge -p ./图片组1/src.txt "
+                   "./图片组2/src.txt ./图片组3/src.txt ./图片组4/src.txt \n\n\n"
+    );
+    printf("获取以上提到的txt文件，运行getSrcTxt.sh获得。\n\n");
+    printf("生成脚本getSrcTxt.sh中:\n");
+    ofstream o("getSrcTxt.sh");
+    o<< "#!/usr/bin/env bash\n"
+            "\n"
+            "if [ $# = 0 ];then\n"
+            "   echo '调用方法:./getSrcTxt.sh path type'\n"
+            "   echo 'path:图片目录相对路径;type:图片类型比如bmp、jpeg等。'\n"
+            "   echo '文件夹中的图片需要用数字命名，才能正确的排序。'\n"
+            "else \n"
+            "   if [ $# = 2 ];then\n"
+            "       if [ ! -d \"$1\" ];then\n"
+            "           echo \"不存在目录:$1\"\n"
+            "           exit -1\n"
+            "       fi\n"
+            "\n"
+            "       cd \"$1\"\n"
+            "\n"
+            "       if [ -f \"src.txt\" ];then\n"
+            "           rm \"src.txt\"\n"
+            "       fi\n"
+            "\n"
+            "       for a in $(ls *.$2|sort -t. -k1.1n);\n"
+            "       do\n"
+            "           echo \"$PWD/$a\" >>src.txt\n"
+            "       done\n"
+            "\n"
+            "       cd ..\n"
+            "   else\n"
+            "       echo '参数不正确。如果路径中间有空格，请用在路径开头和结尾打上英文双引号。'\n"
+            "   fi\n"
+            "fi"<<endl;
+    o.close();
+    system("chmod +x getSrcTxt.sh");
+    printf("生成完成\n");
 }
 
 /**
@@ -83,7 +118,7 @@ int main( int argc, char** argv )
 void parse(int argc,char** argv,map<string,vector<string>> &args){
 
     //检查参数数量
-    ASSERT(argc>12,"参数数量不足");
+    ASSERT(argc>10,"参数数量不足");
 
     for(int i=1;i<argc;i++){
         if(argv[i][0]=='-'){
@@ -106,12 +141,12 @@ void parse(int argc,char** argv,map<string,vector<string>> &args){
                 value.emplace_back(argv[++i]);
                 args.insert(make_pair("-n",value));
             }
-            else if(strcmp(argv[i],"-t")==0){//txt name
-                ASSERT(args.count("-t")==0,"参数-t重复");
-                vector<string> value;
-                value.emplace_back(argv[++i]);
-                args.insert(make_pair("-t",value));
-            }
+//            else if(strcmp(argv[i],"-t")==0){//txt name
+//                ASSERT(args.count("-t")==0,"参数-t重复");
+//                vector<string> value;
+//                value.emplace_back(argv[++i]);
+//                args.insert(make_pair("-t",value));
+//            }
             else if(strcmp(argv[i],"-s")==0){//save path
                 ASSERT(args.count("-s")==0,"参数-s重复");
                 vector<string> value;
@@ -127,12 +162,12 @@ void parse(int argc,char** argv,map<string,vector<string>> &args){
                 break;
             }
         }else{
-            throw runtime_error("参数格式错误");
+            ASSERT(false,"参数格式错误");
         }
     }
 
-    if(args.size()<6){
-        throw runtime_error("参数数量不足");
+    if(args.size()!=5){
+        ASSERT(false,"参数数量不足");
     }
 }
 
@@ -171,21 +206,19 @@ int str2int(string str){
  * @param count 合并图片的组数
  * @param m 横向m张图片
  * @param n 纵向n张图片
- * @param txtName 各个文件夹中指定文件名的txt文件;
- * 得到这个文件可以通过运行以下命令：ls | sort -t. -k1.1n >src.txt
  * @param paths 指定要合并图片的路径
  * @param savePath 保存路径
  */
-void merge(int count,int m,int n,string txtName,vector<string> paths,string savePath){
+void merge(int count,int m,int n,vector<string> paths,string savePath){
 
     ASSERT(paths.size()<=m*n,"指定的路径数量超过m*n");
 
     //初始化各个文件夹内指定图片名字的txt文件的输入流
     vector<ifstream> nameStreams;
     for(int i=0;i<paths.size();i++){
-        nameStreams.emplace_back(ifstream(paths[i]+"/"+txtName,ios::in));
+        nameStreams.emplace_back(ifstream(paths[i],ios::in));
         if(!nameStreams[i].is_open()){
-            throw runtime_error("打开文件\""+paths[i]+"/"+txtName+"\"异常，请检查该文件是否存在");
+            throw runtime_error("打开文件\""+paths[i]+"\"异常，请检查该文件是否存在");
         }
     }
 
@@ -203,12 +236,11 @@ void merge(int count,int m,int n,string txtName,vector<string> paths,string save
         // 读取一组图片
         auto size = static_cast<const int>((paths.size()+m-1) / m);//计算这组图片有几行
         for(int j=0;j<m*n;j++){
-            string picName;
-            nameStreams[j] >> picName;
-            if(j<paths.size() && !picName.empty()) {
+            string picPath;
+            nameStreams[j] >> picPath;
+            if(j<paths.size() && !picPath.empty()) {
 
                 //读取图片
-                string picPath = paths[j] + "/" + picName;
                 Mat img = imread(picPath);
                 ASSERT(!img.empty(), "图片为空,路径："+picPath);
 
