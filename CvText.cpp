@@ -17,7 +17,7 @@ CvText::CvText(const char *fontName) {
     restoreFont();
 
     // 设置C语言的字符集环境
-    //setlocale(LC_ALL, "zh_CN.utf8");
+    setlocale(LC_ALL, "zh_CN.utf8");
 }
 
 // 释放FreeType资源
