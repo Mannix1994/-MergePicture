@@ -3,13 +3,14 @@
 #include <fstream>
 #include <map>
 #include "tools.h"
+#include "CvText.h"
 
 using namespace std;
 using namespace cv;
 
-int str2int(string str);
+int str2int(const string &str);
 void help();
-void merge(int count,int m,int n,vector<string> paths,string savePath);
+void merge(int count,int m,int n,vector<string> paths, const string &savePath);
 void parse(int argc,char** argv,map<string,vector<string>> &args);
 
 int main( int argc, char** argv )
@@ -191,7 +192,7 @@ long charArray2Long(char *str){
  * @param str 数字字符串
  * @return 装换完成的数字
  */
-int str2int(string str){
+int str2int(const string &str){
     stringstream stream(str);
     int num;
     stream>>num;
@@ -209,7 +210,7 @@ int str2int(string str){
  * @param paths 指定要合并图片的路径
  * @param savePath 保存路径
  */
-void merge(int count,int m,int n,vector<string> paths,string savePath){
+void merge(int count,int m,int n,vector<string> paths, const string &savePath){
 
     ASSERT(paths.size()<=m*n,"指定的路径数量超过m*n");
 
@@ -226,6 +227,10 @@ void merge(int count,int m,int n,vector<string> paths,string savePath){
 
     Mat baseMat;//黑色图片
     Mat borderMat;//添加边缘之后的黑色图片
+
+    CvText text("simhei.ttf");
+    text.setFont(nullptr, nullptr, nullptr, nullptr);
+    string msg= "abc中文测试";
 
     while (local_count<count){
         local_count++;
@@ -260,7 +265,8 @@ void merge(int count,int m,int n,vector<string> paths,string savePath){
                 //添加边缘
                 copyMakeBorder(img, img, 30, 5, 5, 5, BORDER_CONSTANT, Scalar(0, j*5+50, 0));
 
-                putText(img,to_string(j+1),Point(5,20),FONT_HERSHEY_SIMPLEX,0.4,Scalar(255,255,255));
+//                putText(img,to_string(j+1),Point(5,20),FONT_HERSHEY_SIMPLEX,0.4,Scalar(255,255,255));
+                text.putText(img, msg, cvPoint(20, 30), CV_RGB(255, 0, 0));
 
                 cols.push_back(img);
             }else{
@@ -286,6 +292,6 @@ void merge(int count,int m,int n,vector<string> paths,string savePath){
         vconcat(rows,final);
         imshow("final",final);
         imwrite(savePath+"/"+to_string(local_count)+".bmp",final);
-        waitKey(1);
+        waitKey(0);
     }
 }
