@@ -12,6 +12,7 @@ int str2int(const string &str);
 void help();
 void merge(int count,int m,int n,vector<string> paths, const string &savePath);
 void parse(int argc,char** argv,map<string,vector<string>> &args);
+string getFileFolderName(string fullPath);
 
 int main( int argc, char** argv )
 {
@@ -230,7 +231,6 @@ void merge(int count,int m,int n,vector<string> paths, const string &savePath){
 
     CvText text("simhei.ttf");
     text.setFont(nullptr, nullptr, nullptr, nullptr);
-    string msg= "abc中文测试";
 
     while (local_count<count){
         local_count++;
@@ -266,7 +266,8 @@ void merge(int count,int m,int n,vector<string> paths, const string &savePath){
                 copyMakeBorder(img, img, 30, 5, 5, 5, BORDER_CONSTANT, Scalar(0, j*5+50, 0));
 
 //                putText(img,to_string(j+1),Point(5,20),FONT_HERSHEY_SIMPLEX,0.4,Scalar(255,255,255));
-                text.putText(img, msg, Point(20, 20),CV_RGB(255,255,255));
+                string msg = to_string(j+1)+". "+getFileFolderName(picPath);
+                text.putText(img, msg, Point(5, 20),CV_RGB(255,255,255));
 
                 cols.push_back(img);
             }else{
@@ -294,4 +295,15 @@ void merge(int count,int m,int n,vector<string> paths, const string &savePath){
         imwrite(savePath+"/"+to_string(local_count)+".bmp",final);
         waitKey(0);
     }
+}
+
+string getFileFolderName(string fullPath) {
+    ulong index = fullPath.find_last_of('/');
+//    cout<<fullPath<<endl;
+    string path = fullPath.substr(0,index);
+//    cout<<path<<endl;
+    ulong index1 = path.find_last_of('/');
+    string folderName = path.substr(index1+1);
+//    cout<<folderName<<endl;
+    return folderName;
 }

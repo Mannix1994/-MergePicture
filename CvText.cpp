@@ -82,6 +82,12 @@ int CvText::putText(cv::Mat &frame, const char *text, cv::Point pos, cv::Scalar 
     int i=0;
     for (; i<count; ++i) {
         wchar_t wc = w_str[i];
+        //如果是ascii字符(范围0~127)，调整字体大小
+        //因为ascii字符在同样的m_fontSize下更小，所以要放大一点
+        if(wc<128)
+            FT_Set_Pixel_Sizes(m_face, (FT_UInt)(m_fontSize.val[0]*1.15), 0);
+        else
+            FT_Set_Pixel_Sizes(m_face, (FT_UInt)m_fontSize.val[0], 0);
         // 输出当前的字符
         putWChar(frame, wc, pos, color);
     }
