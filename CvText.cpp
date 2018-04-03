@@ -17,7 +17,7 @@ CvText::CvText(const char *fontName) {
     restoreFont();
 
     // 设置C语言的字符集环境
-    setlocale(LC_ALL, "zh_CN.utf8");
+//    setlocale(LC_ALL, "zh_CN.utf8");
 }
 
 // 释放FreeType资源
@@ -109,13 +109,13 @@ int CvText::char2Wchar(const char *&src, wchar_t *&dst, const char *locale)
         return 0;
     }
 
-    // 根据环境变量设置locale
+    // 设置C语言的字符集环境
     setlocale(LC_CTYPE, locale);
 
     // 得到转化为需要的宽字符大小
     int w_size = (int)mbstowcs(nullptr, src, 0) + 1;
 
-    // w_size = 0 说明mbstowcs返回值为-1。即在运行过程中遇到了非法字符(很有可能使locale没有设置正确)
+    // w_size = 0 说明mbstowcs返回值为-1。即在运行过程中遇到了非法字符(很有可能是locale没有设置正确)
     if (w_size == 0) {
         dst = nullptr;
         return -1;

@@ -267,7 +267,7 @@ void merge(int count,int m,int n,vector<string> paths, const string &savePath){
 
 //                putText(img,to_string(j+1),Point(5,20),FONT_HERSHEY_SIMPLEX,0.4,Scalar(255,255,255));
                 string msg = to_string(j+1)+". "+getFileFolderName(picPath);
-                text.putText(img, msg, Point(5, 20),CV_RGB(255,255,255));
+                text.putText(img, msg, Point(8, 20),CV_RGB(255,255,255));
 
                 cols.push_back(img);
             }else{
