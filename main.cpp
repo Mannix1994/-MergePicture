@@ -266,7 +266,7 @@ void merge(int count,int m,int n,vector<string> paths, const string &savePath){
                 copyMakeBorder(img, img, 30, 5, 5, 5, BORDER_CONSTANT, Scalar(0, j*5+50, 0));
 
 //                putText(img,to_string(j+1),Point(5,20),FONT_HERSHEY_SIMPLEX,0.4,Scalar(255,255,255));
-                text.putText(img, msg, cvPoint(20, 30), CV_RGB(255, 0, 0));
+                text.putText(img, msg, Point(20, 20),CV_RGB(255,255,255));
 
                 cols.push_back(img);
             }else{

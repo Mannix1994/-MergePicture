@@ -5,7 +5,6 @@
 #include "tools.h"
 #include "CvText.h"
 
-
 CvText::CvText(const char *fontName) {
     ASSERT(fontName != nullptr,"字体名称为空");
 
@@ -28,7 +27,7 @@ CvText::~CvText() {
 }
 
 // 设置字体属性
-void CvText::setFont(int *type, CvScalar *size, bool *underline, float *diaphaneity) {
+void CvText::setFont(int *type, cv::Scalar *size, bool *underline, float *diaphaneity) {
     // 参数合法性检查
     if (type) {
         if (type >= 0) m_fontType = *type;
@@ -64,24 +63,18 @@ void CvText::restoreFont() {
     FT_Set_Pixel_Sizes(m_face, (FT_UInt) m_fontSize.val[0], 0);
 }
 
-// 输出函数(颜色默认为黑色)
-int CvText::putText(cv::Mat &frame, const char *text, Point pos) {
-    return putText(frame, text, pos, CV_RGB(255, 255, 255));
-}
 
-int CvText::putText(cv::Mat &frame, const wchar_t *text, Point pos) {
-    return putText(frame, text, pos, CV_RGB(255, 255, 255));
-}
-
-int CvText::putText(cv::Mat &frame, std::string text, Point pos, Scalar color) {
+int CvText::putText(cv::Mat &frame, std::string text, cv::Point pos, cv::Scalar color) {
     return putText(frame,text.c_str(),pos, std::move(color));
 }
 
-int CvText::putText(cv::Mat &frame, const char *text, Point pos, Scalar color) {
+int CvText::putText(cv::Mat &frame, const char *text, cv::Point pos, cv::Scalar color) {
 
 
-    if (frame.empty()) return -1;
-    if (text == nullptr) return -1;
+    if (frame.empty())
+        return -1;
+    if (text == nullptr)
+        return -1;
 
     wchar_t *w_str ;
     char2Wchar(text, w_str);
@@ -94,21 +87,6 @@ int CvText::putText(cv::Mat &frame, const char *text, Point pos, Scalar color) {
         putWChar(frame, wc, pos, color);
     }
     delete(w_str);
-    return i;
-}
-
-int CvText::putText(cv::Mat &frame, const wchar_t *text, Point pos, Scalar color) {
-
-    if (frame.empty())
-        return -1;
-    if (text == nullptr)
-        return -1;
-
-    int i;
-    for (i = 0; text[i] != '\0'; ++i) {
-        // 输出当前的字符
-        putWChar(frame, text[i], pos, color);
-    }
     return i;
 }
 
@@ -152,7 +130,7 @@ int CvText::char2Wchar(const char *&src, wchar_t *&dst, const char *locale)
 
 
 // 输出当前字符, 更新m_pos位置
-void CvText::putWChar(cv::Mat &frame, wchar_t wc, Point &pos, Scalar color) {
+void CvText::putWChar(cv::Mat &frame, wchar_t wc, cv::Point &pos, cv::Scalar color) {
     // 根据unicode生成字体的二值位图  
     IplImage img = IplImage(frame);
 
@@ -160,14 +138,12 @@ void CvText::putWChar(cv::Mat &frame, wchar_t wc, Point &pos, Scalar color) {
     FT_Load_Glyph(m_face, glyph_index, FT_LOAD_DEFAULT);
     FT_Render_Glyph(m_face->glyph, FT_RENDER_MODE_MONO);
 
-    //
     FT_GlyphSlot slot = m_face->glyph;
 
     // 行列数
     int rows = slot->bitmap.rows;
     int cols = slot->bitmap.width;
 
-    //
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             int off = ((img.origin == 0) ? i : (rows - 1 - i)) * slot->bitmap.pitch + j / 8;
@@ -192,7 +168,6 @@ void CvText::putWChar(cv::Mat &frame, wchar_t wc, Point &pos, Scalar color) {
     } // end for  
 
     // 修改下一个字的输出位置
-
     double space = m_fontSize.val[0] * m_fontSize.val[1];
     double sep = m_fontSize.val[0] * m_fontSize.val[2];
 

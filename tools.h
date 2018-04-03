@@ -4,9 +4,6 @@
 
 #include <iostream>
 #include <string>
-#include <opencv2/opencv.hpp>
-
-using namespace cv;
 
 /**
  * condition为false时抛出错误，错误信息为error_message

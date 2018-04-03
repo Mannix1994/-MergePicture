@@ -1,11 +1,9 @@
 #ifndef CV_TEXT_H
 #define CV_TEXT_H
 
-
+#include <opencv2/opencv.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <opencv2/opencv.hpp>
-
 
 class CvText {
 public:
@@ -25,7 +23,7 @@ public:
      * @param underline 下划线
      * @param diaphaneity 透明度
      */
-    void setFont(int *type, CvScalar *size = nullptr,
+    void setFont(int *type, cv::Scalar *size = nullptr,
                  bool *underline = nullptr, float *diaphaneity = nullptr);
 
     /**
@@ -34,62 +32,39 @@ public:
     void restoreFont();
 
     /**
-     * 将text的内容放到frame的指定位置(pos)，默认背景为黑色。遇到不能输出的字符将停止。
+     * 将text的内容放到frame的指定位置(pos)，默认文本颜色为黑色。遇到不能输出的字符将停止。
      * @param frame 输出的影象
      * @param text 文本内容
      * @param pos 文本位置
+     * @param color 文本颜色
      * @return 返回成功输出的字符长度，失败返回-1。
      */
-    int putText(cv::Mat &frame, const char *text, Point pos);
+    int putText(cv::Mat &frame, std::string text, cv::Point pos,
+                cv::Scalar color = cv::Scalar(0, 0, 0));
 
     /**
-     * 将text的内容放到frame的指定位置(pos)，默认背景为黑色。遇到不能输出的字符将停止。
-     * @param frame 输出的影象
-     * @param text 文本内容
-     * @param pos 文本位置
-     * @return 返回成功输出的字符长度，失败返回-1。
-     */
-    int putText(cv::Mat &frame, const wchar_t *text, Point pos);
-
-    /**
-      * 将text的内容放到frame的指定位置(pos)，默认背景为黑色。遇到不能输出的字符将停止。
+      * 将text的内容放到frame的指定位置(pos)，默认颜色为黑色。遇到不能输出的字符将停止。
       * @param frame 输出的影象
       * @param text 文本内容
       * @param pos 文本位置
+      * @param color 文本颜色
       * @return 返回成功输出的字符长度，失败返回-1。
       */
-    int putText(cv::Mat &frame, const char *text, Point pos, Scalar color);
-
-    /**
-     * 将text的内容放到frame的指定位置(pos)，默认背景为黑色。遇到不能输出的字符将停止。
-     * @param frame 输出的影象
-     * @param text 文本内容
-     * @param pos 文本位置
-     * @return 返回成功输出的字符长度，失败返回-1。
-     */
-    int putText(cv::Mat &frame, const wchar_t *text, Point pos, Scalar color);
-
-    /**
-     * 将text的内容放到frame的指定位置(pos)，默认背景为黑色。遇到不能输出的字符将停止。
-     * @param frame 输出的影象
-     * @param text 文本内容
-     * @param pos 文本位置
-     * @return 返回成功输出的字符长度，失败返回-1。
-     */
-    int putText(cv::Mat &frame, std::string text, Point pos, Scalar color);
-
+    int putText(cv::Mat &frame, const char *text, cv::Point pos,
+                cv::Scalar color = cv::Scalar(0, 0, 0));
 
 private:
 
     //
     /**
-     * 输出wc到frame的pos位置, 更新m_pos位置
+     * 输出wc到frame的pos位置
      * @param frame 输出Mat
      * @param wc 字符
      * @param pos 位置
      * @param color 颜色
      */
-    void putWChar(cv::Mat &frame, wchar_t wc, Point &pos, Scalar color);
+    void putWChar(cv::Mat &frame, wchar_t wc, cv::Point &pos, cv::Scalar color);
+
 private:
 
     FT_Library m_library;   // 字库
@@ -97,7 +72,7 @@ private:
 
     // 默认的字体输出参数
     int m_fontType;
-    CvScalar m_fontSize;
+    cv::Scalar m_fontSize;
     bool m_fontUnderline;
     float m_fontDiaphaneity;
 
