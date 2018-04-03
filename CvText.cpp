@@ -17,7 +17,7 @@ CvText::CvText(const char *fontName) {
     restoreFont();
 
     // 设置C语言的字符集环境
-    setlocale(LC_ALL, "zh_CN.utf8");
+    //setlocale(LC_ALL, "zh_CN.utf8");
 }
 
 // 释放FreeType资源
@@ -50,10 +50,10 @@ void CvText::setFont(int *type, cv::Scalar *size, bool *underline, float *diapha
 void CvText::restoreFont() {
     m_fontType = 0;             // 字体类型(不支持)
 
-    m_fontSize.val[0] = 20;     // 字体大小
+    m_fontSize.val[0] = 15;     // 字体大小
     m_fontSize.val[1] = 0.5;    // 空白字符大小比例
     m_fontSize.val[2] = 0.1;    // 间隔大小比例
-    m_fontSize.val[3] = 0;      // 旋转角度(不支持)  
+    m_fontSize.val[3] = 0;      // 旋转角度(不支持)
 
     m_fontUnderline = false;    // 下画线(不支持)
 
@@ -77,12 +77,11 @@ int CvText::putText(cv::Mat &frame, const char *text, cv::Point pos, cv::Scalar 
         return -1;
 
     wchar_t *w_str ;
-    char2Wchar(text, w_str);
+    int count = char2Wchar(text, w_str);
     //
     int i=0;
-    for (; w_str[i] != '\0'; ++i) {
+    for (; i<count; ++i) {
         wchar_t wc = w_str[i];
-//        printf("%x\n",wc);
         // 输出当前的字符
         putWChar(frame, wc, pos, color);
     }
@@ -125,7 +124,7 @@ int CvText::char2Wchar(const char *&src, wchar_t *&dst, const char *locale)
     if (ret <= 0) {
         return -1;
     }
-    return 0;
+    return ret;
 }
 
 
