@@ -63,8 +63,7 @@ int CvText::putText(cv::Mat &frame, const char *text, cv::Point pos, cv::Scalar 
     wchar_t *w_str ;
     int count = char2Wchar(text, w_str);
     //
-    int i=0;
-    for (; i<count; ++i) {
+    for (int i=0; i<count; ++i) {
         wchar_t wc = w_str[i];
         //如果是ascii字符(范围0~127)，调整字体大小
         //因为ascii字符在同样的m_fontSize下更小，所以要放大一点
@@ -76,7 +75,7 @@ int CvText::putText(cv::Mat &frame, const char *text, cv::Point pos, cv::Scalar 
         putWChar(frame, wc, pos, color);
     }
     delete(w_str);
-    return i;
+    return count;
 }
 
 /**
