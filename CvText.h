@@ -18,6 +18,7 @@
 #define CV_TEXT_H
 
 #include <opencv2/opencv.hpp>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -33,21 +34,22 @@ public:
     virtual ~CvText();
 
     /**
-     * 设置字体属性，属性为空时保持默认值
+     * 设置文本属性
      * @param fontSize 字体大小
-     * @param spaceSize 空格大小比例
-     * @param separatorSize 分隔符大小比例
+     * @param spaceRatio 空格大小比例
+     * @param separatorRatio 分隔符大小比例
      * @param fontDiaphaneity 透明度
      */
-    void setFont(int fontSize=20, float spaceSize=0.5f,
-                 float separatorSize=0.1f, float fontDiaphaneity=1.0f);
-    /**
-     * 恢复默认字体设置
-     */
-    void reset();
+    void setTextStyle(int fontSize, float spaceRatio = 0.5f,
+                      float separatorRatio = 0.1f, float fontDiaphaneity = 1.0f);
 
     /**
-     * 将text的内容放到frame的指定位置(pos)，默认文本颜色为黑色。遇到不能输出的字符将停止。
+     * 恢复默认文本设置
+     */
+    void resetTextStyle();
+
+    /**
+     * 将text的内容放到frame的指定位置(pos)，默认文本颜色为黑色。
      * @param frame 输出的影象
      * @param text 文本内容
      * @param pos 文本位置
@@ -58,7 +60,7 @@ public:
                 cv::Scalar color = cv::Scalar(0, 0, 0));
 
     /**
-      * 将text的内容放到frame的指定位置(pos)，默认颜色为黑色。遇到不能输出的字符将停止。
+      * 将text的内容放到frame的指定位置(pos)，默认颜色为黑色。
       * @param frame 输出的影象
       * @param text 文本内容
       * @param pos 文本位置
@@ -90,15 +92,14 @@ private:
 
     //私有变量区
 private:
-    FT_Library m_library;   // 字库
-    FT_Face m_face;         // 字体
+    FT_Library  m_library;   // 字库
+    FT_Face     m_face;      // 字体
 
     // 默认的字体输出参数
-    int m_fontSize;// 字体大小
-    float m_spaceRatio;// 空白字符大小比例
-    float m_separatorRatio;// 字符间分隔距离大小比例
+    int m_fontSize;         // 字体大小
+    float m_spaceRatio;     // 空白字符大小比例
+    float m_separatorRatio; // 字符间分隔距离大小比例
     float m_fontDiaphaneity;// 透明度
-    //增加旋转角度设置
 };
 
 #endif // CV_TEXT_H

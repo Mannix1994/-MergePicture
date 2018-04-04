@@ -230,7 +230,7 @@ void merge(int count,int m,int n,vector<string> paths, const string &savePath){
     Mat borderMat;//添加边缘之后的黑色图片
 
     CvText text("simhei.ttf");
-//    text.setFont();
+//    text.setTextStyle();
 
     while (local_count<count){
         local_count++;

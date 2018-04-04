@@ -16,9 +16,9 @@ CvText::CvText(const char *fontName) {
     FT_Select_Charmap(m_face,FT_ENCODING_UNICODE);
 
     // 设置字体输出参数
-    reset();
+    resetTextStyle();
 
-    // 设置C语言的字符集环境
+//     //设置C语言的字符集环境
 //    setlocale(LC_ALL, "zh_CN.utf8");
 }
 
@@ -28,8 +28,8 @@ CvText::~CvText() {
     FT_Done_FreeType(m_library);
 }
 
-// 设置字体属性
-void CvText::setFont(int fontSize, float spaceSize, float separatorSize, float fontDiaphaneity) {
+// 设置文本属性
+void CvText::setTextStyle(int fontSize, float spaceSize, float separatorSize, float fontDiaphaneity) {
     if(fontSize>0)
         m_fontSize = fontSize;
     if(spaceSize>0)
@@ -40,15 +40,12 @@ void CvText::setFont(int fontSize, float spaceSize, float separatorSize, float f
         m_fontDiaphaneity = fontDiaphaneity;
 }
 
-// 恢复默认的字体设置
-void CvText::reset() {
-    m_fontSize = 20;     // 字体大小
-    m_spaceRatio = 0.5;    // 空白字符大小比例
-    m_separatorRatio = 0.1;    // 间隔大小比例
+// 恢复默认的文本设置
+void CvText::resetTextStyle() {
+    m_fontSize = 20;        // 字体大小
+    m_spaceRatio = 0.5;     // 空白字符大小比例
+    m_separatorRatio = 0.1;     // 间隔大小比例
     m_fontDiaphaneity = 1.0;    // 色彩比例(可产生透明效果)
-
-    // 设置字符大小
-    FT_Set_Pixel_Sizes(m_face, (FT_UInt) m_fontSize, 0);
 }
 
 
@@ -57,7 +54,6 @@ int CvText::putText(cv::Mat &frame, std::string text, cv::Point pos, cv::Scalar 
 }
 
 int CvText::putText(cv::Mat &frame, const char *text, cv::Point pos, cv::Scalar color) {
-
 
     if (frame.empty())
         return -1;
@@ -94,31 +90,23 @@ int CvText::char2Wchar(const char *&src, wchar_t *&dst, const char *locale)
 {
     if (src == nullptr) {
         dst = nullptr;
-        return 0;
+        return -1;
     }
-
     // 设置C语言的字符集环境
     setlocale(LC_CTYPE, locale);
-
     // 得到转化为需要的宽字符大小
     int w_size = (int)mbstowcs(nullptr, src, 0) + 1;
-
     // w_size = 0 说明mbstowcs返回值为-1。即在运行过程中遇到了非法字符(很有可能是locale没有设置正确)
     if (w_size == 0) {
         dst = nullptr;
         return -1;
     }
-
     dst = new wchar_t[w_size];
     if (dst == nullptr) {
         return -1;
     }
 
-    auto ret = (int)mbstowcs(dst, src, strlen(src)+1);
-    if (ret <= 0) {
-        return -1;
-    }
-    return ret;
+    return (int)mbstowcs(dst, src, strlen(src)+1);
 }
 
 
